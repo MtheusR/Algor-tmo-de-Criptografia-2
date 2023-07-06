@@ -1,30 +1,57 @@
 import cripto_translater, tradutor, gen_tables, funcoes
-import string, os
- 
-if not os.path.isfile('key.csv') or not os.path.isfile('tabs.csv'):
-    
-    funcoes.print_files_main()
-    
-    n_tabelas_chaves = gen_tables.gerar_tamanho_tabelas(5, 10) 
-    char_ascii = " " + string.ascii_letters + string.digits + string.punctuation 
-    gen_tables.gerar_arquivo_csv('key', char_ascii, n_tabelas_chaves)
-    funcoes.print_file('key.csv')
+import os
+from colorama import Fore
+
+def opcao_escrever():
+    if not os.path.isfile('key.csv') or not os.path.isfile('tabs.csv'):
+        funcoes.limpar_console()
+        funcoes.criar_tabela()
+    else:
+        funcoes.limpar_console()
+        input_text = input(chr(8594) + " Arquivos já criados foram encontrados. Deseja gerar novas tabelas? (y/n): ")
+        resposta = input_text.lower()
+        if resposta == "y":
+            funcoes.criar_tabela()
+        elif resposta == "n":
+            print()
+    input()
+    funcoes.limpar_console()
+    input_text = input("\nDigite um texto: ")
+    translation = cripto_translater.translate_text(input_text, cripto_translater.load_translation_tables('key.csv'))
+
+    input_text = input("\n" + chr(8594) + " Deseja salvar essa mensagem em um arquivo? (y/n): ")
+    resposta = input_text.lower()
+    if resposta == "y":
+        file_name = input("\n" + chr(8594) + " Digite o nome do arquivo: ")
+        arquivo = open(file_name +".txt", "w")
+        arquivo.write(translation)
+        arquivo.close()
+        print("\n" + chr(0x1F4C1) + Fore.GREEN + " Arquivo " + file_name +".txt salvo com sucesso!\n" + Fore.RESET)
+    elif resposta == "n":
+        print(f"\n" + chr(128275) + " Texto criptografado: {" + translation + "}\n")
+
+def opcao_ler():
+    file_name = input("\n" + chr(8594) + " Digite o nome do arquivo: ")
+    # Abrir o arquivo em modo de leitura
+    arquivo = open(file_name + ".txt", "r")
+    # Ler o conteúdo do arquivo e armazenar em uma variável string
+    conteudo_lido = arquivo.read()
+    # Fechar o arquivo
+    arquivo.close()
+    text = tradutor.translate_binary_to_text(conteudo_lido)
+    print("\n" + chr(128275) + " Texto traduzido: {" + text + "}")
 
 
-    num_tabelas_tabs = gen_tables.gerar_tamanho_tabelas_tabs(n_tabelas_chaves)
-    char_tabs = list(range(len(num_tabelas_tabs)))
-    gen_tables.gerar_arquivo_csv('tabs', char_tabs, num_tabelas_tabs)
-    funcoes.print_file('tabs.csv')
+systema = True
+while systema == True:
+    funcoes.limpar_console()
+    opcoes = ["Escrever mensagem", "Traduzir arquivo", "Sair"]
+    opcao = funcoes.curses.wrapper(funcoes.menu_principal, opcoes)
 
-    print("\nQuantidade - Tabelas Caracteres:", len(n_tabelas_chaves))
-    print("Tamanho - Tabela Caracteres:", n_tabelas_chaves)
-    print("Quantidade - Tabelas Separadores:", len(num_tabelas_tabs))
-    print("Tamanho - Tabela Separadores: ", num_tabelas_tabs[0])
-    
-input_text = input("\nDigite um texto: ")
-translation = cripto_translater.translate_text(input_text, cripto_translater.load_translation_tables('key.csv'))
-    
-print(translation)
+    if opcao == 1:
+        opcao_escrever()
+        input()
 
-text = tradutor.translate_binary_to_text(translation)
-print("Texto traduzido:", text)
+    elif opcao == 2:
+        opcao_ler()
+        input()
