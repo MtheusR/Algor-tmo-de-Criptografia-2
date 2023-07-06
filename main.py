@@ -2,10 +2,13 @@ import cripto_translater, tradutor, gen_tables, funcoes
 import os
 from colorama import Fore
 
+
 def opcao_escrever():
+    
     if not os.path.isfile('key.csv') or not os.path.isfile('tabs.csv'):
         funcoes.limpar_console()
         funcoes.criar_tabela()
+        
     else:
         funcoes.limpar_console()
         input_text = input(chr(8594) + " Arquivos já criados foram encontrados. Deseja gerar novas tabelas? (y/n): ")

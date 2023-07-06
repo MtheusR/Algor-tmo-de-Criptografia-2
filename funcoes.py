@@ -1,10 +1,10 @@
 import time, curses, sys, string, os
+from colorama import Fore
 import gen_tables
 
 def limpar_console():
     if os.name == 'nt':
         _ = os.system('cls')
-
 
 def print_files_main():
     print()
@@ -18,24 +18,42 @@ def print_file(csv_filename):
     print("+-------------------------+-----------------+")
     time.sleep(0.3) 
 
+import string
+from rich.console import Console
+from rich.table import Table
+from rich import box
+
 def criar_tabela():
-        print_files_main()
-        
-        n_tabelas_chaves = gen_tables.gerar_tamanho_tabelas(5, 10) 
-        char_ascii = " " + string.ascii_letters + string.digits + string.punctuation 
-        gen_tables.gerar_arquivo_csv('key', char_ascii, n_tabelas_chaves)
-        print_file('key.csv')
+    limpar_console()
+    print(chr(0x1F4DD) + Fore.GREEN +" Tabelas geradas com secesso\n" + Fore.RESET)
+    n_tabelas_chaves = gen_tables.gerar_tamanho_tabelas(5, 10)
+    char_ascii = " " + string.ascii_letters + string.digits + string.punctuation
+    gen_tables.gerar_arquivo_csv('key', char_ascii, n_tabelas_chaves)
+    
+    num_tabelas_tabs = gen_tables.gerar_tamanho_tabelas_tabs(n_tabelas_chaves)
+    char_tabs = list(range(len(num_tabelas_tabs)))
+    gen_tables.gerar_arquivo_csv('tabs', char_tabs, num_tabelas_tabs)
 
+    header = ["Arquivo", "Qtd. tabelas", "Tam. tabelas"]
 
-        num_tabelas_tabs = gen_tables.gerar_tamanho_tabelas_tabs(n_tabelas_chaves)
-        char_tabs = list(range(len(num_tabelas_tabs)))
-        gen_tables.gerar_arquivo_csv('tabs', char_tabs, num_tabelas_tabs)
-        print_file('tabs.csv')
+    dados = [
+        ["key.csv", str(len(n_tabelas_chaves)), str(n_tabelas_chaves)],
+        ["tabs.csv", str(len(n_tabelas_chaves)), str(num_tabelas_tabs)]
+    ]
 
-        print("\nQuantidade - Tabelas Caracteres:", len(n_tabelas_chaves))
-        print("Tamanho - Tabela Caracteres:", n_tabelas_chaves)
-        print("Quantidade - Tabelas Separadores:", len(num_tabelas_tabs))
-        print("Tamanho - Tabela Separadores: ", num_tabelas_tabs[0])
+    console = Console()
+    table = Table(show_header=True, header_style="bold magenta", box=box.ROUNDED)
+    table.add_column(header[0], style="dim", width=15)
+    table.add_column(header[1], style="dim", width=15)
+    if len(n_tabelas_chaves) > 6:         
+        table.add_column(header[2], style="dim", width= (((len(n_tabelas_chaves) - 6) * 5)+25))
+    else:
+        table.add_column(header[2], style="dim", width=25)
+
+    for row in dados:
+        table.add_row(*row)
+
+    console.print(table)        
 
 def exibir_menu(stdscr, opcoes, selecao):
     stdscr.clear()
@@ -62,6 +80,7 @@ def exibir_menu(stdscr, opcoes, selecao):
             stdscr.addstr(y, x, opcao_exibida)  # Alinha à esquerda com preenchimento
 
     stdscr.refresh()
+
 def menu_principal(stdscr, opcoes):
     selecao = 0
     opcao = 0
@@ -95,6 +114,10 @@ def menu_principal(stdscr, opcoes):
     curses.curs_set(1)
     return opcao
 
-# if __name__ == "__main__":
-#     if curses.wrapper(menu_principal) == 1:
-#         print("funcionou")
+from rich.console import Console
+from rich.table import Table
+from rich import box
+
+
+    
+    
