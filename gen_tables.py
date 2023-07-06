@@ -51,20 +51,6 @@ def gerar_arquivo_csv(file_name, caracteres, tabelas):
         for char in valores:
             escritor_csv.writerow([char] + valores[char])
 
-def gerar_tamanho_tabelas_tabs():
+def gerar_tamanho_tabelas_tabs(num_tabelas_chaves):
     tamanho = n_random(8, 15)
-    return [tamanho] * len(n_tabelas_chaves)
-
-if __name__ == "__main__":
-    n_tabelas_chaves = gerar_tamanho_tabelas(3, 10) 
-    char_ascii = " " + string.ascii_letters + string.digits + string.punctuation 
-    gerar_arquivo_csv('key', char_ascii, n_tabelas_chaves)
-    
-    print("Qtd tabelas chaves:", len(n_tabelas_chaves))
-    print("Tam. tabela chaves:", n_tabelas_chaves)
-    
-    n_tabelas_tabs = gerar_tamanho_tabelas_tabs()
-    char_tabs = list(range(len(n_tabelas_chaves)))
-    gerar_arquivo_csv('tabs', char_tabs, n_tabelas_tabs)
-    
-    print("Tam. tabela tabs:", n_tabelas_tabs)
+    return [tamanho] * len(num_tabelas_chaves)

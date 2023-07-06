@@ -17,7 +17,7 @@ def translate_binary_to_text(binary_text):
         for translation_table_tabs in translation_table_tabs:
             for character, binary_value in translation_table_tabs.items():
                 if binary_value == binary_chars_tab:
-                    text += character
+                
                     found_tab_translation = True
                     break
             if found_tab_translation:
@@ -63,12 +63,3 @@ def get_table_sizes(csv_file, tipo):
         return max(table_sizes)
     else:
         return table_sizes
-
-
-def main():   
-    binary_text = "110011001011010011001100100111110101100110110111"
-    text = translate_binary_to_text(binary_text)
-    print("Texto traduzido:", text)
-
-if __name__ == "__main__":
-    main()

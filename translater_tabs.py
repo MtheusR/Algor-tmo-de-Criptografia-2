@@ -54,6 +54,3 @@ def carregar_tbas_csv(csv_file):
     with open(csv_file, mode='r') as file:
         leitor = csv.reader(file)
         return list(leitor)
-
-tabelas_de_traducao = carregar_tabelas_de_traducao('tabs.csv')
-traducao = obter_tabs('5555', tabelas_de_traducao)
